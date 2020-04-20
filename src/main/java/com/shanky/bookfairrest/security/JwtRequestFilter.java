@@ -1,6 +1,8 @@
 package com.shanky.bookfairrest.security;
 
 import com.shanky.bookfairrest.service.CustomUserDetailService;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,15 +30,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
         String accessToken, username = null;
-        if (header != null && header.startsWith("Bearer ")) {
-            accessToken = header.substring(7);
-            username = jwtAuthenticationProvider.extractUsername(accessToken);
-            UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
-            if (jwtAuthenticationProvider.validateToken(accessToken, userDetails)) {
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        try {
+            if (header != null && header.startsWith("Bearer ")) {
+                accessToken = header.substring(7);
+                username = jwtAuthenticationProvider.extractUsername(accessToken);
+                UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
+                if (jwtAuthenticationProvider.validateToken(accessToken, userDetails)) {
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
             }
+        } catch (IllegalArgumentException | MalformedJwtException e) {
+            System.out.println("Unable to get JWT Token");
+        } catch (ExpiredJwtException e) {
+            System.out.println("JWT Token has expired");
         }
         filterChain.doFilter(request, response);
     }

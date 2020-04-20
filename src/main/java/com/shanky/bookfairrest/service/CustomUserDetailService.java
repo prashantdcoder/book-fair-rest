@@ -1,8 +1,8 @@
 package com.shanky.bookfairrest.service;
 
-import com.shanky.bookfairrest.constants.StringUtil;
 import com.shanky.bookfairrest.domain.User;
 import com.shanky.bookfairrest.repository.UserRepository;
+import com.shanky.bookfairrest.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

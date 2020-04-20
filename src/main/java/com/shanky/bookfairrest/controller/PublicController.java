@@ -1,11 +1,13 @@
 package com.shanky.bookfairrest.controller;
 
 import com.shanky.bookfairrest.DTO.ResponseDTO;
-import com.shanky.bookfairrest.constants.StringUtil;
+import com.shanky.bookfairrest.VO.UserVO;
 import com.shanky.bookfairrest.domain.User;
 import com.shanky.bookfairrest.repository.UserRepository;
 import com.shanky.bookfairrest.security.JwtAuthenticationProvider;
 import com.shanky.bookfairrest.service.CustomUserDetailService;
+import com.shanky.bookfairrest.utils.AppUtil;
+import com.shanky.bookfairrest.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +19,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/")
@@ -60,16 +59,15 @@ public class PublicController {
     }
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<ResponseDTO<Map<String, String>>> authenticate(String username, String password) {
-        ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
+    ResponseEntity<ResponseDTO<UserVO>> authenticate(String username, String password) {
+        ResponseDTO<UserVO> responseDTO = new ResponseDTO<>();
         try {
-            Map<String, String> map = new HashMap<>();
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            System.out.println(authentication.isAuthenticated());
             UserDetails userDetails = userDetailService.loadUserByUsername(username);
             String jwtToken = jwtAuthenticationProvider.generateToken(userDetails);
-            map.put("username", username);
-            map.put("accessToken", jwtToken);
-            responseDTO.setSuccessResponse(map, StringUtil.LOGIN_SUCCESS);
+            UserVO userVO = new UserVO(username, jwtToken, AppUtil.parseDateInString(jwtAuthenticationProvider.extractExpiration(jwtToken)));
+            responseDTO.setSuccessResponse(userVO, StringUtil.LOGIN_SUCCESS);
         } catch (BadCredentialsException e) {
             responseDTO.setFailureResponse(null, e.getMessage());
         }

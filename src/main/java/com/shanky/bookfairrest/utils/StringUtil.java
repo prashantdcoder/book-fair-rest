@@ -1,4 +1,4 @@
-package com.shanky.bookfairrest.constants;
+package com.shanky.bookfairrest.utils;
 
 public interface StringUtil {
 

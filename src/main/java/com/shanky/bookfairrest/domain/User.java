@@ -14,12 +14,18 @@ public class User {
     private String username;
     private String email;
     private String password;
+
+    @Column(name = "full_name")
     private String fullName;
 
 
     @OneToMany(mappedBy = "author")
     private Set<Book> books;
 
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            mappedBy = "user")
+    private UserRole userRole;
 
     public String getUsername() {
         return username;

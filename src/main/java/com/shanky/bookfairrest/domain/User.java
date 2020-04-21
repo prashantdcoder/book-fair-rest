@@ -10,13 +10,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-
     private String username;
     private String email;
     private String password;
 
     @Column(name = "full_name")
     private String fullName;
+
+    @Column(name = "is_active")
+    private boolean isActive;
 
 
     @OneToMany(mappedBy = "author")
@@ -59,4 +61,11 @@ public class User {
         this.fullName = fullName;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 }

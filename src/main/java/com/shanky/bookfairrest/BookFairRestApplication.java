@@ -1,5 +1,6 @@
 package com.shanky.bookfairrest;
 
+import com.shanky.bookfairrest.constants.RoleConstant;
 import com.shanky.bookfairrest.domain.Role;
 import com.shanky.bookfairrest.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,10 @@ public class BookFairRestApplication {
 
     @PostConstruct
     void init() {
-        if (roleRepository.findByAuthority("ADMIN") == null) {
-            Role role = new Role("ADMIN", "Role Admin");
-            roleRepository.save(role);
+        if (roleRepository.count() == 0) {
+            roleRepository.save(new Role(RoleConstant.ROLE_ADMIN, "Role Admin"));
+            roleRepository.save(new Role(RoleConstant.ROLE_AUTHOR, "Role Author"));
+            roleRepository.save(new Role(RoleConstant.ROLE_READER, "Role Reader"));
         }
     }
 

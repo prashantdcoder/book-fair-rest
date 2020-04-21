@@ -1,9 +1,6 @@
 package com.shanky.bookfairrest.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Role {
@@ -15,6 +12,10 @@ public class Role {
     private String authority;
     private String description;
 
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            mappedBy = "role")
+    private UserRole userRole;
 
     public Role() {
 

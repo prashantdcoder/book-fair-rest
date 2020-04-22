@@ -1,20 +1,21 @@
-package com.shanky.bookfairrest.domain;
+package com.shanky.bookfairrest.CO;
 
 import com.shanky.bookfairrest.enums.BookCategory;
 
-import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
 
-@Entity
-public class Book {
+public class BookCO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
+    @NotNull
     private String title;
+
     private String description;
 
+
     private String isbn;
+
+    @Max(300)
     private Double price;
     private BookCategory category;
 
@@ -22,20 +23,6 @@ public class Book {
     private Double breadth;
     private Double height;
     private Integer pages;
-
-    private boolean isActive;
-
-    @ManyToOne
-    @JoinColumn(name = "author_id", nullable = false)
-    private User author;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;
@@ -109,19 +96,4 @@ public class Book {
         this.pages = pages;
     }
 
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
 }

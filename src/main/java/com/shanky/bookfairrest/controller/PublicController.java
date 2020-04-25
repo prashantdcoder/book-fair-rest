@@ -43,8 +43,8 @@ public class PublicController {
     JwtAuthenticationProvider jwtAuthenticationProvider;
 
 
-    @RequestMapping(value = "/", method = RequestMethod.GET, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<ResponseDTO<String>> index(String name) {
+    @RequestMapping(value = "/", method = RequestMethod.GET, consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<ResponseDTO<String>> index() {
         ResponseDTO<String> responseDTO = new ResponseDTO<>();
         responseDTO.setSuccessResponse(StringUtil.WElCOME_NOTE, null);
         return ResponseEntity.ok(responseDTO);

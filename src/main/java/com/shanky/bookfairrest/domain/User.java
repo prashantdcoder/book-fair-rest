@@ -20,6 +20,9 @@ public class User {
     @Column(name = "is_active")
     private boolean isActive;
 
+    @Column(name = "verification_code")
+    private String verificationCode;
+
 
     @OneToMany(mappedBy = "author")
     private Set<Book> books;
@@ -67,5 +70,13 @@ public class User {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
     }
 }

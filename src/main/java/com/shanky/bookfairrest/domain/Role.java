@@ -1,6 +1,9 @@
 package com.shanky.bookfairrest.domain;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class Role {
@@ -10,7 +13,20 @@ public class Role {
     private Long id;
 
     private String authority;
+
     private String description;
+
+    @Column(name = "date_created")
+    @CreationTimestamp
+    private LocalDateTime dateCreated;
+
+    @Column(name = "last_updated")
+    @CreationTimestamp
+    private LocalDateTime lastUpdated;
+
+
+    @Column(name = "is_active")
+    private boolean isActive;
 
     @OneToOne(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
@@ -40,5 +56,29 @@ public class Role {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(LocalDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

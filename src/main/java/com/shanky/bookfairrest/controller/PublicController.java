@@ -8,6 +8,8 @@ import com.shanky.bookfairrest.security.JwtAuthenticationProvider;
 import com.shanky.bookfairrest.service.CustomUserDetailService;
 import com.shanky.bookfairrest.utils.AppUtil;
 import com.shanky.bookfairrest.utils.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,8 @@ import java.util.stream.Collectors;
 public class PublicController {
 
 
+    private static final Logger logger = LoggerFactory.getLogger(PublicController.class);
+
     @Autowired
     UserRepository userRepository;
 
@@ -45,6 +49,7 @@ public class PublicController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET, consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<ResponseDTO<String>> index() {
+        logger.info(StringUtil.WElCOME_NOTE);
         ResponseDTO<String> responseDTO = new ResponseDTO<>();
         responseDTO.setSuccessResponse(StringUtil.WElCOME_NOTE, null);
         return ResponseEntity.ok(responseDTO);

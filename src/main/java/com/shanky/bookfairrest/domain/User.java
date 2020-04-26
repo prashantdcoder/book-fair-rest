@@ -1,6 +1,9 @@
 package com.shanky.bookfairrest.domain;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -11,7 +14,9 @@ public class User {
     private Long id;
 
     private String username;
+
     private String email;
+
     private String password;
 
     @Column(name = "full_name")
@@ -20,8 +25,13 @@ public class User {
     @Column(name = "is_active")
     private boolean isActive;
 
-    @Column(name = "verification_code")
-    private String verificationCode;
+    @Column(name = "date_created")
+    @CreationTimestamp
+    private Date dateCreated;
+
+    @Column(name = "last_updated")
+    @CreationTimestamp
+    private Date lastUpdated;
 
 
     @OneToMany(mappedBy = "author")
@@ -72,11 +82,19 @@ public class User {
         isActive = active;
     }
 
-    public String getVerificationCode() {
-        return verificationCode;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setVerificationCode(String verificationCode) {
-        this.verificationCode = verificationCode;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 }

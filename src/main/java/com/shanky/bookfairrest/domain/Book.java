@@ -1,8 +1,10 @@
 package com.shanky.bookfairrest.domain;
 
 import com.shanky.bookfairrest.enums.BookCategory;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class Book {
@@ -23,6 +25,16 @@ public class Book {
     private Double height;
     private Integer pages;
 
+    @Column(name = "date_created")
+    @CreationTimestamp
+    private LocalDateTime dateCreated;
+
+    @Column(name = "last_updated")
+    @CreationTimestamp
+    private LocalDateTime lastUpdated;
+
+
+    @Column(name = "is_active")
     private boolean isActive;
 
     @ManyToOne
@@ -123,5 +135,21 @@ public class Book {
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+
+    public LocalDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(LocalDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 }

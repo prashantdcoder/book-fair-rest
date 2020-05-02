@@ -11,7 +11,7 @@ public class Invite {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long id;
 
     private String email;
 
@@ -29,10 +29,8 @@ public class Invite {
     @CreationTimestamp
     private LocalDateTime lastUpdated;
 
-
     @Column(name = "is_active")
     private boolean isActive;
-
 
     public String getEmail() {
         return email;
@@ -58,7 +56,6 @@ public class Invite {
         this.verificationCode = verificationCode;
     }
 
-
     public boolean isActive() {
         return isActive;
     }
@@ -81,5 +78,13 @@ public class Invite {
 
     public void setDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

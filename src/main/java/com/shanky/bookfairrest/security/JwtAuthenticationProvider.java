@@ -3,7 +3,7 @@ package com.shanky.bookfairrest.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +16,8 @@ import java.util.function.Function;
 public class JwtAuthenticationProvider {
 
 
-    @Value("${security.jwt.token.secret.key}")
-    private String SECRET_KEY;
-
-    @Value("${security.jwt.token.expire.length:360000}")
-    private Long EXPIRY;
+    @Autowired
+    Credentials credentials;
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
@@ -32,8 +29,8 @@ public class JwtAuthenticationProvider {
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRY))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() + credentials.getJwt().getTokenExpireLength()))
+                .signWith(SignatureAlgorithm.HS256, credentials.getJwt().getTokenSecretKey())
                 .compact();
     }
 
@@ -43,7 +40,7 @@ public class JwtAuthenticationProvider {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(credentials.getJwt().getTokenSecretKey()).parseClaimsJws(token).getBody();
     }
 
     public String extractUsername(String token) {

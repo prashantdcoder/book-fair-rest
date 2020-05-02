@@ -12,7 +12,7 @@ public class AppUtil {
         return DATE_WITH_TIME.format(date);
     }
 
-    public static Integer generateRandomNumber() {
+    public static int generateRandomNumber() {
         Random random = new Random();
         return 1000 + random.nextInt(9999);
     }

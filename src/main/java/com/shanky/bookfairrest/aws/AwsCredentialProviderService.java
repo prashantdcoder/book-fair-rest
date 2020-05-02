@@ -3,24 +3,24 @@ package com.shanky.bookfairrest.aws;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import com.shanky.bookfairrest.security.Credentials;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class AwsCredentialProviderService implements AWSCredentialsProvider {
 
-    @Value("${aws.config.key}")
-    private String key;
-
-    @Value("${aws.config.secret}")
-    private String secret;
-
-    @Value("${aws.config.sender.email}")
     private String sender;
+
+    private BasicAWSCredentials basicAWSCredentials;
+
+    AwsCredentialProviderService(Credentials serviceCredentials) {
+        this.sender = serviceCredentials.getAws().getSenderEmail();
+        this.basicAWSCredentials = new BasicAWSCredentials(serviceCredentials.getAws().getKey(), serviceCredentials.getAws().getSecret());
+    }
 
     @Override
     public AWSCredentials getCredentials() {
-        return new BasicAWSCredentials(key, secret);
+        return basicAWSCredentials;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class AwsCredentialProviderService implements AWSCredentialsProvider {
 
     }
 
-    public String getSenderEmail() {
+    public String getSender() {
         return this.sender;
     }
 }

@@ -3,6 +3,7 @@ package com.shanky.bookfairrest.utils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
+import java.util.UUID;
 
 public class AppUtil {
 
@@ -15,5 +16,9 @@ public class AppUtil {
     public static int generateRandomNumber() {
         Random random = new Random();
         return 1000 + random.nextInt(9999);
+    }
+
+    public static String generateRandomUUID() {
+        return UUID.randomUUID().toString();
     }
 }

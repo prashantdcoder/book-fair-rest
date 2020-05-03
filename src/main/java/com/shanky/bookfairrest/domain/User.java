@@ -33,7 +33,6 @@ public class User {
     @CreationTimestamp
     private Date lastUpdated;
 
-
     @OneToMany(mappedBy = "author")
     private Set<Book> books;
 
@@ -41,6 +40,9 @@ public class User {
             cascade = CascadeType.ALL,
             mappedBy = "user")
     private UserRole userRole;
+
+
+    private String uuid;
 
     public String getUsername() {
         return username;
@@ -96,5 +98,13 @@ public class User {
 
     public void setLastUpdated(Date lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,5 +84,11 @@ public class PublicController {
             responseDTO.setFailureResponse(null, e.getMessage());
         }
         return ResponseEntity.ok(responseDTO);
+    }
+
+
+    @RequestMapping(value = "/forgotPassword", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<ResponseDTO<String>> forgotPassword(String email, HttpServletRequest request) {
+        return ResponseEntity.ok(userDetailService.sendForgotPasswordEmail(email, request.getRequestURL().toString()));
     }
 }

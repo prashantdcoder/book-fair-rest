@@ -13,4 +13,7 @@ public interface StringUtil {
 
     String INVITATION_EXIST = "Invitation to this user has already been sent";
     String INVITATION_SENT = "Invitation has been sent";
+
+    String NO_EMAIL = "Sorry, no such account exists with this email";
+    String FORGOT_PASSWORD = "Forgot password link has been sent";
 }

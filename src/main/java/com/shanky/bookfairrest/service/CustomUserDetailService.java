@@ -1,11 +1,13 @@
 package com.shanky.bookfairrest.service;
 
+import com.shanky.bookfairrest.DTO.ResponseDTO;
 import com.shanky.bookfairrest.constants.RoleConstant;
 import com.shanky.bookfairrest.domain.User;
 import com.shanky.bookfairrest.domain.UserRole;
 import com.shanky.bookfairrest.repository.RoleRepository;
 import com.shanky.bookfairrest.repository.UserRepository;
 import com.shanky.bookfairrest.repository.UserRoleRepository;
+import com.shanky.bookfairrest.utils.AppUtil;
 import com.shanky.bookfairrest.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,6 +17,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +40,9 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Autowired
     private UserRoleRepository userRoleRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Transactional
     @Override
@@ -56,5 +66,32 @@ public class CustomUserDetailService implements UserDetailsService {
         userRepository.save(user);
         UserRole userRole = new UserRole(user, roleRepository.findByAuthority(RoleConstant.ROLE_ADMIN));
         userRoleRepository.save(userRole);
+    }
+
+    public User findByEmail(String email) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
+        Root<User> userRoot = criteriaQuery.from(User.class);
+        criteriaQuery.select(userRoot).where(builder.equal(userRoot.get("email"), email));
+        TypedQuery<User> resultQuery = entityManager.createQuery(criteriaQuery);
+        return resultQuery.getResultList().size() != 0 ? resultQuery.getSingleResult() : null;
+    }
+
+    public ResponseDTO<String> sendForgotPasswordEmail(String email, String requestUrl) {
+        ResponseDTO<String> responseDTO = new ResponseDTO<>();
+        try {
+            User user = findByEmail(email);
+            if (user == null) {
+                responseDTO.setFailureResponse(null, StringUtil.NO_EMAIL);
+            } else {
+                String token = AppUtil.generateRandomUUID();
+                requestUrl = requestUrl + "?token=" + token;
+                responseDTO.setSuccessResponse(requestUrl, StringUtil.FORGOT_PASSWORD);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseDTO.setFailureResponse(null, StringUtil.INTERNAL_SERVER_ERROR);
+        }
+        return responseDTO;
     }
 }

@@ -86,9 +86,13 @@ public class PublicController {
         return ResponseEntity.ok(responseDTO);
     }
 
-
     @RequestMapping(value = "/forgotPassword", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<ResponseDTO<String>> forgotPassword(String email, HttpServletRequest request) {
         return ResponseEntity.ok(userDetailService.sendForgotPasswordEmail(email, request.getRequestURL().toString()));
+    }
+
+    @RequestMapping(value = "/verifyToken", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<ResponseDTO<String>> verifyToken(String email, String token) {
+        return ResponseEntity.ok(userDetailService.verifyForgotPasswordToken(email, token));
     }
 }

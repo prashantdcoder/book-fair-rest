@@ -21,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -85,6 +86,8 @@ public class CustomUserDetailService implements UserDetailsService {
                 responseDTO.setFailureResponse(null, StringUtil.NO_EMAIL);
             } else {
                 String token = AppUtil.generateRandomUUID();
+                user.setUuid(token);
+                userRepository.save(user);
                 requestUrl = requestUrl + "?token=" + token;
                 responseDTO.setSuccessResponse(requestUrl, StringUtil.FORGOT_PASSWORD);
             }
@@ -93,5 +96,34 @@ public class CustomUserDetailService implements UserDetailsService {
             responseDTO.setFailureResponse(null, StringUtil.INTERNAL_SERVER_ERROR);
         }
         return responseDTO;
+    }
+
+    public ResponseDTO<String> verifyForgotPasswordToken(String email, String token) {
+        ResponseDTO<String> responseDTO = new ResponseDTO<>();
+        try {
+            User user = findByEmailAndUuid(email, token);
+            if (user == null) {
+                responseDTO.setFailureResponse(null, StringUtil.LINK_EXPIRED);
+            } else {
+                user.setUuid(null);
+                userRepository.save(user);
+                responseDTO.setSuccessResponse(null, StringUtil.USER_VERIFIED);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseDTO.setFailureResponse(null, StringUtil.INTERNAL_SERVER_ERROR);
+        }
+        return responseDTO;
+    }
+
+    public User findByEmailAndUuid(String email, String uuid) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> query = builder.createQuery(User.class);
+        Root<User> root = query.from(User.class);
+        Predicate emailPredicate = builder.equal(root.get("email"), email);
+        Predicate tokenPredicate = builder.equal(root.get("uuid"), uuid);
+        query.select(root).where(emailPredicate, tokenPredicate);
+        TypedQuery<User> resultQuery = entityManager.createQuery(query);
+        return resultQuery.getResultList().size() != 0 ? resultQuery.getSingleResult() : null;
     }
 }

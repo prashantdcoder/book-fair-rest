@@ -16,4 +16,6 @@ public interface StringUtil {
 
     String NO_EMAIL = "Sorry, no such account exists with this email";
     String FORGOT_PASSWORD = "Forgot password link has been sent";
+    String LINK_EXPIRED = "Link has been expired";
+    String USER_VERIFIED = "User has been verified";
 }
